@@ -1,0 +1,1935 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/colby/Desktop/Thesis/Data/IPUMS_2019/USA_00009/4.3.21.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 3 Apr 2021, 16:00:47
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. *Create educational attainment categories
+.         
+. gen lessHS = educd > 1 & educd < 62
+{txt}
+{com}. gen HSgrad = educd == 63 | educd == 64
+{txt}
+{com}. gen somecoll = educd == 65 | educd == 71 | educd == 81
+{txt}
+{com}. gen collgrad = educd == 101 
+{txt}
+{com}. gen graddeg = educd == 114 | educd == 115 | educd == 116
+{txt}
+{com}. 
+. *Create SPOUSAL educational attainment categories
+. gen lessHS_sp = educd_sp > 1 & educd_sp < 62
+{txt}
+{com}. gen HSgrad_sp = educd_sp == 63 | educd_sp == 64
+{txt}
+{com}. gen somecoll_sp = educd_sp == 65 | educd_sp == 71 | educd_sp == 81
+{txt}
+{com}. gen collgrad_sp = educd_sp == 101 
+{txt}
+{com}. gen graddeg_sp = educd_sp == 114 | educd_sp == 115 | educd_sp == 116
+{txt}
+{com}. 
+. *Includes partnered people
+. sum lessHS-graddeg_sp
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 6}lessHS {c |}{res}  3,999,225    .0887875    .2844367          0          1
+{txt}{space 6}HSgrad {c |}{res}  3,999,225    .2454786    .4303706          0          1
+{txt}{space 4}somecoll {c |}{res}  3,999,225     .353727    .4781258          0          1
+{txt}{space 4}collgrad {c |}{res}  3,999,225    .2143973    .4104036          0          1
+{txt}{space 5}graddeg {c |}{res}  3,999,225    .0976097    .2967862          0          1
+{txt}{hline 13}{c +}{hline 57}
+{space 3}lessHS_sp {c |}{res}  3,999,225    .0346637    .1829266          0          1
+{txt}{space 3}HSgrad_sp {c |}{res}  3,999,225    .0920831    .2891432          0          1
+{txt}{space 1}somecoll_sp {c |}{res}  3,999,225    .1379032    .3447984          0          1
+{txt}{space 1}collgrad_sp {c |}{res}  3,999,225    .1175198    .3220387          0          1
+{txt}{space 2}graddeg_sp {c |}{res}  3,999,225    .0666839    .2494738          0          1
+{txt}
+{com}. 
+. * this replaces all the non-values with a 
+. for var less-HS-graddeg_sp: replace X=. if sprule == 0
+{bf}{err}less{sf} ambiguous abbreviation
+{txt}{search r(111), local:r(111);}
+
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. *This gives the educational attainment info for partnered people 
+. sum lessHS-graddeg_sp if sprule != 0
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 6}lessHS {c |}{res}  1,795,067    .0757041    .2645242          0          1
+{txt}{space 6}HSgrad {c |}{res}  1,795,067    .2023384    .4017433          0          1
+{txt}{space 4}somecoll {c |}{res}  1,795,067    .3078359    .4615984          0          1
+{txt}{space 4}collgrad {c |}{res}  1,795,067    .2653071    .4414967          0          1
+{txt}{space 5}graddeg {c |}{res}  1,795,067    .1488145    .3559056          0          1
+{txt}{hline 13}{c +}{hline 57}
+{space 3}lessHS_sp {c |}{res}  1,795,067    .0772272    .2669517          0          1
+{txt}{space 3}HSgrad_sp {c |}{res}  1,795,067    .2051517    .4038125          0          1
+{txt}{space 1}somecoll_sp {c |}{res}  1,795,067    .3072342    .4613475          0          1
+{txt}{space 1}collgrad_sp {c |}{res}  1,795,067     .261822    .4396264          0          1
+{txt}{space 2}graddeg_sp {c |}{res}  1,795,067    .1485649    .3556592          0          1
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. *Create educational categorizations for household head and spouse
+. gen edcount = 1 if lessHS == 1
+{txt}(3,644,144 missing values generated)
+
+{com}. replace edcount = 2 if HSgrad == 1
+{txt}(981,724 real changes made)
+
+{com}. replace edcount = 3 if somecoll == 1
+{txt}(1,414,634 real changes made)
+
+{com}. replace edcount = 4 if collgrad == 1
+{txt}(857,423 real changes made)
+
+{com}. replace edcount = 5 if graddeg == 1
+{txt}(390,363 real changes made)
+
+{com}. 
+. gen edcount_sp = 1 if lessHS_sp == 1
+{txt}(3,860,597 missing values generated)
+
+{com}. replace edcount_sp = 2 if HSgrad_sp == 1
+{txt}(368,261 real changes made)
+
+{com}. replace edcount_sp = 3 if somecoll_sp == 1
+{txt}(551,506 real changes made)
+
+{com}. replace edcount_sp = 4 if collgrad_sp == 1
+{txt}(469,988 real changes made)
+
+{com}. replace edcount_sp = 5 if graddeg_sp == 1
+{txt}(266,684 real changes made)
+
+{com}. 
+. tab edcount
+
+    {txt}edcount {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}    355,081        8.88        8.88
+{txt}          2 {c |}{res}    981,724       24.55       33.43
+{txt}          3 {c |}{res}  1,414,634       35.37       68.80
+{txt}          4 {c |}{res}    857,423       21.44       90.24
+{txt}          5 {c |}{res}    390,363        9.76      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+{txt}
+{com}. tab edcount_sp
+
+ {txt}edcount_sp {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}    138,628        7.72        7.72
+{txt}          2 {c |}{res}    368,261       20.52       28.24
+{txt}          3 {c |}{res}    551,506       30.72       58.96
+{txt}          4 {c |}{res}    469,988       26.18       85.14
+{txt}          5 {c |}{res}    266,684       14.86      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  1,795,067      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. *Create educational distance - only magnitude matters
+. gen eddist = edcount - edcount_sp
+{txt}(2,204,158 missing values generated)
+
+{com}. replace eddist = eddist * (-1) if eddist < 0 
+{txt}(484,582 real changes made)
+
+{com}. tab eddist
+
+     {txt}eddist {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}    814,536       45.38       45.38
+{txt}          1 {c |}{res}    720,104       40.12       85.49
+{txt}          2 {c |}{res}    213,804       11.91       97.40
+{txt}          3 {c |}{res}     41,494        2.31       99.71
+{txt}          4 {c |}{res}      5,129        0.29      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  1,795,067      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. *create a samesex variable that's 1 if a samesex married couple 
+. gen samesex = ssmc == 2
+{txt}
+{com}. replace samesex = 0 if ssmc == 0
+{txt}(0 real changes made)
+
+{com}. replace samesex = . if ssmc == 1
+{txt}(0 real changes made)
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. tab samesex 
+
+    {txt}samesex {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}  3,980,700       99.54       99.54
+{txt}          1 {c |}{res}     18,525        0.46      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. *generate same-sex male and female couples --> samesex_m = 1 MALE
+. gen samesex_m = samesex == 1 & sex == 1
+{txt}
+{com}. replace samesex_m = . if samesex == 0
+{txt}(3,980,700 real changes made, 3,980,700 to missing)
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. sort met2013 
+{txt}
+{com}. 
+. save "/Users/colby/Desktop/Thesis/Data/IPUMS_2019/USA_00009/Colby Thesis Data v2.dta", replace 
+{txt}(note: file /Users/colby/Desktop/Thesis/Data/IPUMS_2019/USA_00009/Colby Thesis Data v2.dta not found)
+file /Users/colby/Desktop/Thesis/Data/IPUMS_2019/USA_00009/Colby Thesis Data v2.dta saved
+
+{com}. 
+. bysort met2013 : gen pop = _N 
+{txt}
+{com}. tab pop
+
+        {txt}pop {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+        859 {c |}{res}        859        0.02        0.02
+{txt}        889 {c |}{res}        889        0.02        0.04
+{txt}        977 {c |}{res}        977        0.02        0.07
+{txt}       1024 {c |}{res}      1,024        0.03        0.09
+{txt}       1047 {c |}{res}      1,047        0.03        0.12
+{txt}       1048 {c |}{res}      1,048        0.03        0.15
+{txt}       1081 {c |}{res}      1,081        0.03        0.17
+{txt}       1164 {c |}{res}      1,164        0.03        0.20
+{txt}       1225 {c |}{res}      1,225        0.03        0.23
+{txt}       1231 {c |}{res}      1,231        0.03        0.26
+{txt}       1269 {c |}{res}      1,269        0.03        0.30
+{txt}       1274 {c |}{res}      1,274        0.03        0.33
+{txt}       1278 {c |}{res}      1,278        0.03        0.36
+{txt}       1296 {c |}{res}      1,296        0.03        0.39
+{txt}       1332 {c |}{res}      1,332        0.03        0.42
+{txt}       1342 {c |}{res}      1,342        0.03        0.46
+{txt}       1362 {c |}{res}      1,362        0.03        0.49
+{txt}       1363 {c |}{res}      1,363        0.03        0.53
+{txt}       1370 {c |}{res}      1,370        0.03        0.56
+{txt}       1371 {c |}{res}      1,371        0.03        0.60
+{txt}       1381 {c |}{res}      1,381        0.03        0.63
+{txt}       1399 {c |}{res}      2,798        0.07        0.70
+{txt}       1408 {c |}{res}      1,408        0.04        0.73
+{txt}       1416 {c |}{res}      1,416        0.04        0.77
+{txt}       1421 {c |}{res}      1,421        0.04        0.81
+{txt}       1448 {c |}{res}      1,448        0.04        0.84
+{txt}       1453 {c |}{res}      1,453        0.04        0.88
+{txt}       1456 {c |}{res}      1,456        0.04        0.91
+{txt}       1481 {c |}{res}      1,481        0.04        0.95
+{txt}       1535 {c |}{res}      1,535        0.04        0.99
+{txt}       1549 {c |}{res}      1,549        0.04        1.03
+{txt}       1588 {c |}{res}      1,588        0.04        1.07
+{txt}       1632 {c |}{res}      1,632        0.04        1.11
+{txt}       1654 {c |}{res}      1,654        0.04        1.15
+{txt}       1666 {c |}{res}      1,666        0.04        1.19
+{txt}       1689 {c |}{res}      1,689        0.04        1.23
+{txt}       1691 {c |}{res}      1,691        0.04        1.28
+{txt}       1702 {c |}{res}      1,702        0.04        1.32
+{txt}       1725 {c |}{res}      1,725        0.04        1.36
+{txt}       1732 {c |}{res}      1,732        0.04        1.41
+{txt}       1757 {c |}{res}      1,757        0.04        1.45
+{txt}       1781 {c |}{res}      1,781        0.04        1.49
+{txt}       1789 {c |}{res}      1,789        0.04        1.54
+{txt}       1792 {c |}{res}      1,792        0.04        1.58
+{txt}       1802 {c |}{res}      3,604        0.09        1.67
+{txt}       1808 {c |}{res}      1,808        0.05        1.72
+{txt}       1833 {c |}{res}      1,833        0.05        1.77
+{txt}       1844 {c |}{res}      1,844        0.05        1.81
+{txt}       1855 {c |}{res}      1,855        0.05        1.86
+{txt}       1864 {c |}{res}      1,864        0.05        1.90
+{txt}       1869 {c |}{res}      1,869        0.05        1.95
+{txt}       1886 {c |}{res}      1,886        0.05        2.00
+{txt}       1887 {c |}{res}      1,887        0.05        2.05
+{txt}       1898 {c |}{res}      1,898        0.05        2.09
+{txt}       1900 {c |}{res}      1,900        0.05        2.14
+{txt}       1903 {c |}{res}      1,903        0.05        2.19
+{txt}       1929 {c |}{res}      1,929        0.05        2.24
+{txt}       1962 {c |}{res}      1,962        0.05        2.29
+{txt}       1968 {c |}{res}      1,968        0.05        2.33
+{txt}       2062 {c |}{res}      2,062        0.05        2.39
+{txt}       2068 {c |}{res}      2,068        0.05        2.44
+{txt}       2069 {c |}{res}      2,069        0.05        2.49
+{txt}       2098 {c |}{res}      2,098        0.05        2.54
+{txt}       2120 {c |}{res}      2,120        0.05        2.59
+{txt}       2136 {c |}{res}      2,136        0.05        2.65
+{txt}       2168 {c |}{res}      2,168        0.05        2.70
+{txt}       2197 {c |}{res}      2,197        0.05        2.76
+{txt}       2214 {c |}{res}      2,214        0.06        2.81
+{txt}       2219 {c |}{res}      2,219        0.06        2.87
+{txt}       2264 {c |}{res}      2,264        0.06        2.92
+{txt}       2266 {c |}{res}      2,266        0.06        2.98
+{txt}       2267 {c |}{res}      2,267        0.06        3.04
+{txt}       2275 {c |}{res}      2,275        0.06        3.10
+{txt}       2317 {c |}{res}      2,317        0.06        3.15
+{txt}       2318 {c |}{res}      2,318        0.06        3.21
+{txt}       2326 {c |}{res}      2,326        0.06        3.27
+{txt}       2358 {c |}{res}      2,358        0.06        3.33
+{txt}       2411 {c |}{res}      2,411        0.06        3.39
+{txt}       2434 {c |}{res}      2,434        0.06        3.45
+{txt}       2437 {c |}{res}      2,437        0.06        3.51
+{txt}       2484 {c |}{res}      2,484        0.06        3.57
+{txt}       2540 {c |}{res}      2,540        0.06        3.64
+{txt}       2561 {c |}{res}      2,561        0.06        3.70
+{txt}       2603 {c |}{res}      2,603        0.07        3.76
+{txt}       2612 {c |}{res}      2,612        0.07        3.83
+{txt}       2616 {c |}{res}      2,616        0.07        3.90
+{txt}       2617 {c |}{res}      2,617        0.07        3.96
+{txt}       2628 {c |}{res}      2,628        0.07        4.03
+{txt}       2635 {c |}{res}      2,635        0.07        4.09
+{txt}       2688 {c |}{res}      2,688        0.07        4.16
+{txt}       2752 {c |}{res}      2,752        0.07        4.23
+{txt}       2768 {c |}{res}      2,768        0.07        4.30
+{txt}       2809 {c |}{res}      2,809        0.07        4.37
+{txt}       2855 {c |}{res}      2,855        0.07        4.44
+{txt}       2940 {c |}{res}      2,940        0.07        4.51
+{txt}       2993 {c |}{res}      2,993        0.07        4.59
+{txt}       3023 {c |}{res}      3,023        0.08        4.66
+{txt}       3069 {c |}{res}      3,069        0.08        4.74
+{txt}       3075 {c |}{res}      3,075        0.08        4.82
+{txt}       3160 {c |}{res}      3,160        0.08        4.90
+{txt}       3212 {c |}{res}      3,212        0.08        4.98
+{txt}       3361 {c |}{res}      3,361        0.08        5.06
+{txt}       3373 {c |}{res}      3,373        0.08        5.14
+{txt}       3385 {c |}{res}      3,385        0.08        5.23
+{txt}       3407 {c |}{res}      3,407        0.09        5.31
+{txt}       3408 {c |}{res}      3,408        0.09        5.40
+{txt}       3436 {c |}{res}      3,436        0.09        5.49
+{txt}       3442 {c |}{res}      3,442        0.09        5.57
+{txt}       3516 {c |}{res}      3,516        0.09        5.66
+{txt}       3539 {c |}{res}      3,539        0.09        5.75
+{txt}       3558 {c |}{res}      3,558        0.09        5.84
+{txt}       3565 {c |}{res}      3,565        0.09        5.93
+{txt}       3649 {c |}{res}      3,649        0.09        6.02
+{txt}       3660 {c |}{res}      3,660        0.09        6.11
+{txt}       3669 {c |}{res}      3,669        0.09        6.20
+{txt}       3859 {c |}{res}      3,859        0.10        6.30
+{txt}       3916 {c |}{res}      3,916        0.10        6.40
+{txt}       3917 {c |}{res}      3,917        0.10        6.49
+{txt}       3969 {c |}{res}      3,969        0.10        6.59
+{txt}       3978 {c |}{res}      3,978        0.10        6.69
+{txt}       3994 {c |}{res}      3,994        0.10        6.79
+{txt}       4052 {c |}{res}      4,052        0.10        6.89
+{txt}       4071 {c |}{res}      4,071        0.10        6.99
+{txt}       4119 {c |}{res}      4,119        0.10        7.10
+{txt}       4207 {c |}{res}      4,207        0.11        7.20
+{txt}       4229 {c |}{res}      4,229        0.11        7.31
+{txt}       4314 {c |}{res}      4,314        0.11        7.42
+{txt}       4315 {c |}{res}      4,315        0.11        7.52
+{txt}       4363 {c |}{res}      4,363        0.11        7.63
+{txt}       4431 {c |}{res}      4,431        0.11        7.74
+{txt}       4444 {c |}{res}      4,444        0.11        7.86
+{txt}       4452 {c |}{res}      4,452        0.11        7.97
+{txt}       4508 {c |}{res}      4,508        0.11        8.08
+{txt}       4542 {c |}{res}      4,542        0.11        8.19
+{txt}       4560 {c |}{res}      4,560        0.11        8.31
+{txt}       4601 {c |}{res}      4,601        0.12        8.42
+{txt}       4642 {c |}{res}      4,642        0.12        8.54
+{txt}       4670 {c |}{res}      4,670        0.12        8.66
+{txt}       4685 {c |}{res}      4,685        0.12        8.77
+{txt}       4736 {c |}{res}      4,736        0.12        8.89
+{txt}       4780 {c |}{res}      4,780        0.12        9.01
+{txt}       4882 {c |}{res}      4,882        0.12        9.13
+{txt}       4962 {c |}{res}      4,962        0.12        9.26
+{txt}       5039 {c |}{res}      5,039        0.13        9.38
+{txt}       5123 {c |}{res}      5,123        0.13        9.51
+{txt}       5130 {c |}{res}      5,130        0.13        9.64
+{txt}       5190 {c |}{res}      5,190        0.13        9.77
+{txt}       5258 {c |}{res}      5,258        0.13        9.90
+{txt}       5373 {c |}{res}      5,373        0.13       10.03
+{txt}       5433 {c |}{res}      5,433        0.14       10.17
+{txt}       5447 {c |}{res}      5,447        0.14       10.31
+{txt}       5503 {c |}{res}      5,503        0.14       10.44
+{txt}       5755 {c |}{res}      5,755        0.14       10.59
+{txt}       5838 {c |}{res}      5,838        0.15       10.73
+{txt}       5858 {c |}{res}      5,858        0.15       10.88
+{txt}       5989 {c |}{res}      5,989        0.15       11.03
+{txt}       6081 {c |}{res}      6,081        0.15       11.18
+{txt}       6156 {c |}{res}      6,156        0.15       11.34
+{txt}       6182 {c |}{res}      6,182        0.15       11.49
+{txt}       6212 {c |}{res}      6,212        0.16       11.65
+{txt}       6213 {c |}{res}      6,213        0.16       11.80
+{txt}       6301 {c |}{res}      6,301        0.16       11.96
+{txt}       6302 {c |}{res}      6,302        0.16       12.12
+{txt}       6482 {c |}{res}      6,482        0.16       12.28
+{txt}       6553 {c |}{res}      6,553        0.16       12.44
+{txt}       6583 {c |}{res}      6,583        0.16       12.61
+{txt}       6617 {c |}{res}      6,617        0.17       12.77
+{txt}       6629 {c |}{res}      6,629        0.17       12.94
+{txt}       6699 {c |}{res}      6,699        0.17       13.11
+{txt}       6710 {c |}{res}      6,710        0.17       13.27
+{txt}       6773 {c |}{res}      6,773        0.17       13.44
+{txt}       6846 {c |}{res}      6,846        0.17       13.61
+{txt}       7056 {c |}{res}      7,056        0.18       13.79
+{txt}       7259 {c |}{res}      7,259        0.18       13.97
+{txt}       7463 {c |}{res}      7,463        0.19       14.16
+{txt}       7465 {c |}{res}      7,465        0.19       14.35
+{txt}       7494 {c |}{res}      7,494        0.19       14.53
+{txt}       7838 {c |}{res}      7,838        0.20       14.73
+{txt}       7897 {c |}{res}      7,897        0.20       14.93
+{txt}       8043 {c |}{res}      8,043        0.20       15.13
+{txt}       8054 {c |}{res}      8,054        0.20       15.33
+{txt}       8241 {c |}{res}      8,241        0.21       15.53
+{txt}       8291 {c |}{res}      8,291        0.21       15.74
+{txt}       8707 {c |}{res}      8,707        0.22       15.96
+{txt}       8948 {c |}{res}      8,948        0.22       16.18
+{txt}       9002 {c |}{res}      9,002        0.23       16.41
+{txt}       9054 {c |}{res}      9,054        0.23       16.64
+{txt}       9220 {c |}{res}      9,220        0.23       16.87
+{txt}       9579 {c |}{res}      9,579        0.24       17.11
+{txt}       9646 {c |}{res}      9,646        0.24       17.35
+{txt}       9755 {c |}{res}      9,755        0.24       17.59
+{txt}       9996 {c |}{res}      9,996        0.25       17.84
+{txt}      10074 {c |}{res}     10,074        0.25       18.09
+{txt}      10162 {c |}{res}     10,162        0.25       18.35
+{txt}      10253 {c |}{res}     10,253        0.26       18.60
+{txt}      10445 {c |}{res}     10,445        0.26       18.86
+{txt}      10861 {c |}{res}     10,861        0.27       19.14
+{txt}      11003 {c |}{res}     11,003        0.28       19.41
+{txt}      11187 {c |}{res}     11,187        0.28       19.69
+{txt}      11266 {c |}{res}     11,266        0.28       19.97
+{txt}      11799 {c |}{res}     11,799        0.30       20.27
+{txt}      11885 {c |}{res}     11,885        0.30       20.56
+{txt}      12113 {c |}{res}     12,113        0.30       20.87
+{txt}      12164 {c |}{res}     12,164        0.30       21.17
+{txt}      12185 {c |}{res}     12,185        0.30       21.48
+{txt}      12595 {c |}{res}     12,595        0.31       21.79
+{txt}      12854 {c |}{res}     12,854        0.32       22.11
+{txt}      13264 {c |}{res}     13,264        0.33       22.44
+{txt}      13601 {c |}{res}     13,601        0.34       22.78
+{txt}      13821 {c |}{res}     13,821        0.35       23.13
+{txt}      13923 {c |}{res}     13,923        0.35       23.48
+{txt}      14041 {c |}{res}     14,041        0.35       23.83
+{txt}      15184 {c |}{res}     15,184        0.38       24.21
+{txt}      15687 {c |}{res}     15,687        0.39       24.60
+{txt}      15873 {c |}{res}     15,873        0.40       25.00
+{txt}      15877 {c |}{res}     15,877        0.40       25.39
+{txt}      16085 {c |}{res}     16,085        0.40       25.80
+{txt}      16109 {c |}{res}     16,109        0.40       26.20
+{txt}      16204 {c |}{res}     16,204        0.41       26.60
+{txt}      17254 {c |}{res}     17,254        0.43       27.04
+{txt}      20131 {c |}{res}     20,131        0.50       27.54
+{txt}      21474 {c |}{res}     21,474        0.54       28.08
+{txt}      22382 {c |}{res}     22,382        0.56       28.64
+{txt}      24392 {c |}{res}     24,392        0.61       29.25
+{txt}      24531 {c |}{res}     24,531        0.61       29.86
+{txt}      24550 {c |}{res}     24,550        0.61       30.47
+{txt}      24964 {c |}{res}     24,964        0.62       31.10
+{txt}      25858 {c |}{res}     25,858        0.65       31.74
+{txt}      26039 {c |}{res}     26,039        0.65       32.40
+{txt}      27306 {c |}{res}     27,306        0.68       33.08
+{txt}      27346 {c |}{res}     27,346        0.68       33.76
+{txt}      27612 {c |}{res}     27,612        0.69       34.45
+{txt}      29170 {c |}{res}     29,170        0.73       35.18
+{txt}      29656 {c |}{res}     29,656        0.74       35.92
+{txt}      29775 {c |}{res}     29,775        0.74       36.67
+{txt}      30825 {c |}{res}     30,825        0.77       37.44
+{txt}      31241 {c |}{res}     31,241        0.78       38.22
+{txt}      32378 {c |}{res}     32,378        0.81       39.03
+{txt}      32624 {c |}{res}     32,624        0.82       39.85
+{txt}      34046 {c |}{res}     34,046        0.85       40.70
+{txt}      37474 {c |}{res}     37,474        0.94       41.63
+{txt}      38925 {c |}{res}     38,925        0.97       42.61
+{txt}      40287 {c |}{res}     40,287        1.01       43.61
+{txt}      43049 {c |}{res}     43,049        1.08       44.69
+{txt}      51068 {c |}{res}     51,068        1.28       45.97
+{txt}      52939 {c |}{res}     52,939        1.32       47.29
+{txt}      57102 {c |}{res}     57,102        1.43       48.72
+{txt}      63049 {c |}{res}     63,049        1.58       50.30
+{txt}      64476 {c |}{res}     64,476        1.61       51.91
+{txt}      65911 {c |}{res}     65,911        1.65       53.56
+{txt}      66257 {c |}{res}     66,257        1.66       55.21
+{txt}      67969 {c |}{res}     67,969        1.70       56.91
+{txt}      70839 {c |}{res}     70,839        1.77       58.68
+{txt}      82951 {c |}{res}     82,951        2.07       60.76
+{txt}      91947 {c |}{res}     91,947        2.30       63.06
+{txt}     105362 {c |}{res}    105,362        2.63       65.69
+{txt}     189718 {c |}{res}    189,718        4.74       70.44
+{txt}     241599 {c |}{res}    241,599        6.04       76.48
+{txt}     940765 {c |}{res}    940,765       23.52      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. *cutoffs 
+.         * weight is frequency weight ? 
+. tabstat pop [fweight=perwt] if met2013 != 0, stats(p25 p50 p75 p95)
+
+{txt}{ralign 12:variable} {...}
+{c |}       p25       p50       p75       p95
+{hline 13}{c +}{hline 40}
+{ralign 12:pop} {...}
+{c |}{...}
+ {res}    10445     32378     70839    241599
+{txt}{hline 13}{c BT}{hline 40}
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. *location cutoffs
+. gen rural = pop < 10445 | met2013 == 0
+{txt}
+{com}. gen smallcity = (pop > 10444 & pop < 32378)
+{txt}
+{com}. gen midcity = (pop > 32377 & pop < 70839)
+{txt}
+{com}. gen bigcity = (pop > 70838 & pop < .) & met2013 != 0 
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. tab rural
+
+      {txt}rural {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}  2,314,502       57.87       57.87
+{txt}          1 {c |}{res}  1,684,723       42.13      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+{txt}
+{com}. tab smallcity
+
+  {txt}smallcity {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}  3,214,693       80.38       80.38
+{txt}          1 {c |}{res}    784,532       19.62      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+{txt}
+{com}. tab midcity
+
+    {txt}midcity {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}  3,251,671       81.31       81.31
+{txt}          1 {c |}{res}    747,554       18.69      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+{txt}
+{com}. tab bigcity
+
+    {txt}bigcity {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}  3,216,809       80.44       80.44
+{txt}          1 {c |}{res}    782,416       19.56      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+{txt}
+{com}. 
+. tab met2013 if bigcity == 1
+
+            {txt}Metropolitan area (2013 OMB {c |}
+                          delineations) {c |}      Freq.     Percent        Cum.
+{hline 40}{c +}{hline 35}
+     Chicago-Naperville-Elgin, IL-IN-WI {c |}{res}    105,362       13.47       13.47
+{txt}        Dallas-Fort Worth-Arlington, TX {c |}{res}     91,947       11.75       25.22
+{txt}   Houston-The Woodlands-Sugar Land, TX {c |}{res}     70,839        9.05       34.27
+{txt}     Los Angeles-Long Beach-Anaheim, CA {c |}{res}    189,718       24.25       58.52
+{txt}  New York-Newark-Jersey City, NY-NJ-PA {c |}{res}    241,599       30.88       89.40
+{txt}Washington-Arlington-Alexandria, DC-VA- {c |}{res}     82,951       10.60      100.00
+{txt}{hline 40}{c +}{hline 35}
+                                  Total {c |}{res}    782,416      100.00
+{txt}
+{com}. tab met2013 if rural == 1
+
+            {txt}Metropolitan area (2013 OMB {c |}
+                          delineations) {c |}      Freq.     Percent        Cum.
+{hline 40}{c +}{hline 35}
+               Not in identifiable area {c |}{res}    940,765       55.84       55.84
+{txt}                              Akron, OH {c |}{res}      7,897        0.47       56.31
+{txt}                        Albuquerque, NM {c |}{res}      8,948        0.53       56.84
+{txt}      Allentown-Bethlehem-Easton, PA-NJ {c |}{res}      8,707        0.52       57.36
+{txt}                           Amarillo, TX {c |}{res}      3,558        0.21       57.57
+{txt}                          Anchorage, AK {c |}{res}      4,119        0.24       57.81
+{txt}                          Ann Arbor, MI {c |}{res}      5,190        0.31       58.12
+{txt}       Anniston-Oxford-Jacksonville, AL {c |}{res}      1,231        0.07       58.19
+{txt}                          Asheville, NC {c |}{res}      5,258        0.31       58.51
+{txt}            Atlantic City-Hammonton, NJ {c |}{res}      2,635        0.16       58.66
+{txt}                     Auburn-Opelika, AL {c |}{res}      1,855        0.11       58.77
+{txt}         Augusta-Richmond County, GA-SC {c |}{res}      5,858        0.35       59.12
+{txt}                        Bakersfield, CA {c |}{res}     10,253        0.61       59.73
+{txt}                             Bangor, ME {c |}{res}      1,844        0.11       59.84
+{txt}                    Barnstable Town, MA {c |}{res}      1,929        0.11       59.95
+{txt}                        Baton Rouge, LA {c |}{res}      8,241        0.49       60.44
+{txt}               Beaumont-Port Arthur, TX {c |}{res}      4,882        0.29       60.73
+{txt}                         Bellingham, WA {c |}{res}      2,616        0.16       60.89
+{txt}                       Bend-Redmond, OR {c |}{res}      1,332        0.08       60.97
+{txt}                         Binghamton, NY {c |}{res}      3,373        0.20       61.17
+{txt}                           Bismarck, ND {c |}{res}      1,371        0.08       61.25
+{txt}  Blacksburg-Christiansburg-Radford, VA {c |}{res}      2,752        0.16       61.41
+{txt}                        Bloomington, IL {c |}{res}      2,940        0.17       61.59
+{txt}                        Bloomington, IN {c |}{res}      2,612        0.16       61.74
+{txt}                         Boise City, ID {c |}{res}      6,710        0.40       62.14
+{txt}               Bremerton-Silverdale, WA {c |}{res}      3,994        0.24       62.38
+{txt}        Bridgeport-Stamford-Norwalk, CT {c |}{res}     10,162        0.60       62.98
+{txt}              Brownsville-Harlingen, TX {c |}{res}      4,452        0.26       63.24
+{txt}                         Burlington, NC {c |}{res}      2,326        0.14       63.38
+{txt}        Burlington-South Burlington, VT {c |}{res}      2,317        0.14       63.52
+{txt}                   Canton-Massillon, OH {c |}{res}      4,508        0.27       63.79
+{txt}              Cape Coral-Fort Myers, FL {c |}{res}      6,583        0.39       64.18
+{txt}                   Champaign-Urbana, IL {c |}{res}      3,660        0.22       64.40
+{txt}                         Charleston, WV {c |}{res}      1,900        0.11       64.51
+{txt}        Charleston-North Charleston, SC {c |}{res}      9,996        0.59       65.10
+{txt}                     Chattanooga, TN-GA {c |}{res}      6,617        0.39       65.49
+{txt}                              Chico, CA {c |}{res}      3,069        0.18       65.68
+{txt}                     Clarksville, TN-KY {c |}{res}      4,601        0.27       65.95
+{txt}                      Coeur d'Alene, ID {c |}{res}      1,362        0.08       66.03
+{txt}              College Station-Bryan, TX {c |}{res}      4,229        0.25       66.28
+{txt}                   Colorado Springs, CO {c |}{res}      9,220        0.55       66.83
+{txt}                           Columbia, MO {c |}{res}      2,411        0.14       66.97
+{txt}                     Corpus Christi, TX {c |}{res}      6,182        0.37       67.34
+{txt}              Daphne-Fairhope-Foley, AL {c |}{res}      1,456        0.09       67.42
+{txt}                             Dayton, OH {c |}{res}      9,755        0.58       68.00
+{txt}                            Decatur, AL {c |}{res}      1,453        0.09       68.09
+{txt}                            Decatur, IL {c |}{res}      1,416        0.08       68.17
+{txt} Deltona-Daytona Beach-Ormond Beach, FL {c |}{res}      5,989        0.36       68.53
+{txt}         Des Moines-West Des Moines, IA {c |}{res}      6,773        0.40       68.93
+{txt}                              Dover, DE {c |}{res}      1,887        0.11       69.04
+{txt}                   East Stroudsburg, PA {c |}{res}      1,048        0.06       69.11
+{txt}                         Eau Claire, WI {c |}{res}      1,725        0.10       69.21
+{txt}                          El Centro, CA {c |}{res}      2,267        0.13       69.34
+{txt}                     Elkhart-Goshen, IN {c |}{res}      2,068        0.12       69.47
+{txt}                            El Paso, TX {c |}{res}      9,579        0.57       70.03
+{txt}                               Erie, PA {c |}{res}      3,442        0.20       70.24
+{txt}                             Eugene, OR {c |}{res}      5,039        0.30       70.54
+{txt}                       Fayetteville, NC {c |}{res}      5,755        0.34       70.88
+{txt}  Fayetteville-Springdale-Rogers, AR-MO {c |}{res}      6,302        0.37       71.25
+{txt}                          Flagstaff, AZ {c |}{res}      2,768        0.16       71.42
+{txt}                           Florence, SC {c |}{res}      2,264        0.13       71.55
+{txt}                       Fort Collins, CO {c |}{res}      4,780        0.28       71.84
+{txt}                         Fort Wayne, IN {c |}{res}      4,736        0.28       72.12
+{txt}                            Gadsden, AL {c |}{res}      1,024        0.06       72.18
+{txt}                        Gainesville, FL {c |}{res}      4,670        0.28       72.45
+{txt}                        Gainesville, GA {c |}{res}      2,437        0.14       72.60
+{txt}                        Glens Falls, NY {c |}{res}      1,691        0.10       72.70
+{txt}                          Goldsboro, NC {c |}{res}      1,296        0.08       72.78
+{txt}                     Grand Junction, CO {c |}{res}      1,399        0.08       72.86
+{txt}               Grand Rapids-Wyoming, MI {c |}{res}      9,646        0.57       73.43
+{txt}              Greensboro-High Point, NC {c |}{res}      9,002        0.53       73.97
+{txt}                         Greenville, NC {c |}{res}      2,069        0.12       74.09
+{txt}         Gulfport-Biloxi-Pascagoula, MS {c |}{res}      3,436        0.20       74.29
+{txt}                   Hanford-Corcoran, CA {c |}{res}      2,617        0.16       74.45
+{txt}                Harrisburg-Carlisle, PA {c |}{res}      6,699        0.40       74.85
+{txt}                       Harrisonburg, VA {c |}{res}      2,484        0.15       74.99
+{txt}           Hickory-Lenoir-Morganton, NC {c |}{res}      4,071        0.24       75.24
+{txt}Hilton Head Island-Bluffton-Beaufort, S {c |}{res}      1,864        0.11       75.35
+{txt}                  Homosassa Springs, FL {c |}{res}        889        0.05       75.40
+{txt}                    Houma-Thibodaux, LA {c |}{res}      2,358        0.14       75.54
+{txt}                         Huntsville, AL {c |}{res}      4,444        0.26       75.80
+{txt}                          Iowa City, IA {c |}{res}      1,808        0.11       75.91
+{txt}                             Ithaca, NY {c |}{res}      2,197        0.13       76.04
+{txt}                            Jackson, MI {c |}{res}      1,869        0.11       76.15
+{txt}                            Jackson, MS {c |}{res}      7,465        0.44       76.59
+{txt}                            Jackson, TN {c |}{res}      1,421        0.08       76.68
+{txt}                  Janesville-Beloit, WI {c |}{res}      1,481        0.09       76.77
+{txt}                     Jefferson City, MO {c |}{res}      2,136        0.13       76.89
+{txt}                          Johnstown, PA {c |}{res}      2,434        0.14       77.04
+{txt}                             Joplin, MO {c |}{res}      2,275        0.14       77.17
+{txt}                  Kalamazoo-Portage, MI {c |}{res}      4,542        0.27       77.44
+{txt}                           Kankakee, IL {c |}{res}      1,666        0.10       77.54
+{txt}              La Crosse-Onalaska, WI-MN {c |}{res}      1,269        0.08       77.62
+{txt}                          Lafayette, LA {c |}{res}      5,503        0.33       77.94
+{txt}           Lafayette-West Lafayette, IN {c |}{res}      3,408        0.20       78.15
+{txt}           Lake Havasu City-Kingman, AZ {c |}{res}      1,757        0.10       78.25
+{txt}              Lakeland-Winter Haven, FL {c |}{res}      8,054        0.48       78.73
+{txt}                          Lancaster, PA {c |}{res}      5,130        0.30       79.03
+{txt}               Lansing-East Lansing, MI {c |}{res}      6,629        0.39       79.43
+{txt}                             Laredo, TX {c |}{res}      3,669        0.22       79.64
+{txt}                         Las Cruces, NM {c |}{res}      1,898        0.11       79.76
+{txt}                           Lawrence, KS {c |}{res}      1,535        0.09       79.85
+{txt}                            Lebanon, PA {c |}{res}      1,399        0.08       79.93
+{txt}                    Lewiston-Auburn, ME {c |}{res}        977        0.06       79.99
+{txt}                               Lima, OH {c |}{res}      1,363        0.08       80.07
+{txt}                            Lincoln, NE {c |}{res}      3,649        0.22       80.29
+{txt}Little Rock-North Little Rock-Conway, A {c |}{res}      7,463        0.44       80.73
+{txt}                            Lubbock, TX {c |}{res}      4,560        0.27       81.00
+{txt}                          Lynchburg, VA {c |}{res}      3,361        0.20       81.20
+{txt}                             Madera, CA {c |}{res}      1,702        0.10       81.30
+{txt}                  Manchester-Nashua, NH {c |}{res}      3,978        0.24       81.54
+{txt}                          Mansfield, OH {c |}{res}      1,448        0.09       81.62
+{txt}           McAllen-Edinburg-Mission, TX {c |}{res}      7,838        0.47       82.09
+{txt}                            Medford, OR {c |}{res}      2,098        0.12       82.21
+{txt}                             Merced, CA {c |}{res}      3,212        0.19       82.40
+{txt}             Michigan City-La Porte, IN {c |}{res}      1,632        0.10       82.50
+{txt}                            Midland, TX {c |}{res}      1,732        0.10       82.60
+{txt}                             Mobile, AL {c |}{res}      4,315        0.26       82.86
+{txt}                            Modesto, CA {c |}{res}      6,081        0.36       83.22
+{txt}                             Monroe, LA {c |}{res}      1,802        0.11       83.33
+{txt}                             Monroe, MI {c |}{res}      1,381        0.08       83.41
+{txt}                         Montgomery, AL {c |}{res}      3,969        0.24       83.64
+{txt}                         Morgantown, WV {c |}{res}      2,219        0.13       83.78
+{txt}                             Muncie, IN {c |}{res}      1,654        0.10       83.87
+{txt}                           Muskegon, MI {c |}{res}      1,962        0.12       83.99
+{txt}Myrtle Beach-Conway-North Myrtle Beach, {c |}{res}      4,052        0.24       84.23
+{txt}                               Napa, CA {c |}{res}      1,886        0.11       84.34
+{txt}      Naples-Immokalee-Marco Island, FL {c |}{res}      2,628        0.16       84.50
+{txt}                  New Haven-Milford, CT {c |}{res}     10,074        0.60       85.10
+{txt}                Niles-Benton Harbor, MI {c |}{res}      1,802        0.11       85.20
+{txt}      North Port-Sarasota-Bradenton, FL {c |}{res}      6,212        0.37       85.57
+{txt}                 Norwich-New London, CT {c |}{res}      3,539        0.21       85.78
+{txt}                              Ocala, FL {c |}{res}      2,688        0.16       85.94
+{txt}                         Ocean City, NJ {c |}{res}      1,164        0.07       86.01
+{txt}                             Odessa, TX {c |}{res}      1,789        0.11       86.12
+{txt}                   Ogden-Clearfield, UT {c |}{res}      7,056        0.42       86.54
+{txt}                   Olympia-Tumwater, WA {c |}{res}      3,023        0.18       86.72
+{txt}                     Oshkosh-Neenah, WI {c |}{res}      1,781        0.11       86.82
+{txt}                          Owensboro, KY {c |}{res}      1,370        0.08       86.90
+{txt}      Palm Bay-Melbourne-Titusville, FL {c |}{res}      4,962        0.29       87.20
+{txt}                 Parkersburg-Vienna, WV {c |}{res}      1,047        0.06       87.26
+{txt}         Pensacola-Ferry Pass-Brent, FL {c |}{res}      6,213        0.37       87.63
+{txt}                         Pittsfield, MA {c |}{res}      1,903        0.11       87.74
+{txt}            Portland-South Portland, ME {c |}{res}      4,431        0.26       88.00
+{txt}                     Port St. Lucie, FL {c |}{res}      3,075        0.18       88.19
+{txt}                           Prescott, AZ {c |}{res}      1,588        0.09       88.28
+{txt}                             Pueblo, CO {c |}{res}      2,062        0.12       88.40
+{txt}                        Punta Gorda, FL {c |}{res}      1,081        0.06       88.47
+{txt}                             Racine, WI {c |}{res}      1,408        0.08       88.55
+{txt}                            Reading, PA {c |}{res}      4,642        0.28       88.83
+{txt}                            Redding, CA {c |}{res}      2,168        0.13       88.96
+{txt}                               Reno, NV {c |}{res}      5,838        0.35       89.30
+{txt}                            Roanoke, VA {c |}{res}      3,516        0.21       89.51
+{txt}                           Rockford, IL {c |}{res}      3,407        0.20       89.71
+{txt}                        Rocky Mount, NC {c |}{res}      1,342        0.08       89.79
+{txt}                            Saginaw, MI {c |}{res}      2,214        0.13       89.92
+{txt}                         St. George, UT {c |}{res}      1,278        0.08       90.00
+{txt}                      St. Joseph, MO-KS {c |}{res}      1,833        0.11       90.11
+{txt}                            Salinas, CA {c |}{res}      6,846        0.41       90.51
+{txt}                       Salisbury, MD-DE {c |}{res}      4,363        0.26       90.77
+{txt}                         San Angelo, TX {c |}{res}      1,549        0.09       90.87
+{txt}San Luis Obispo-Paso Robles-Arroyo Gran {c |}{res}      3,565        0.21       91.08
+{txt}             Santa Cruz-Watsonville, CA {c |}{res}      3,385        0.20       91.28
+{txt}                           Santa Fe, NM {c |}{res}      1,968        0.12       91.39
+{txt}          Santa Maria-Santa Barbara, CA {c |}{res}      6,301        0.37       91.77
+{txt}                         Santa Rosa, CA {c |}{res}      5,373        0.32       92.09
+{txt}   Scranton--Wilkes-Barre--Hazleton, PA {c |}{res}      6,156        0.37       92.45
+{txt}               Sebastian-Vero Beach, FL {c |}{res}        859        0.05       92.50
+{txt}                          Sheboygan, WI {c |}{res}      1,225        0.07       92.58
+{txt}            Shreveport-Bossier City, LA {c |}{res}      4,314        0.26       92.83
+{txt}                        Spartanburg, SC {c |}{res}      3,917        0.23       93.07
+{txt}             Spokane-Spokane Valley, WA {c |}{res}      8,291        0.49       93.56
+{txt}                        Springfield, IL {c |}{res}      2,540        0.15       93.71
+{txt}                        Springfield, MA {c |}{res}      7,494        0.44       94.15
+{txt}                        Springfield, MO {c |}{res}      5,123        0.30       94.46
+{txt}                        Springfield, OH {c |}{res}      1,689        0.10       94.56
+{txt}                      State College, PA {c |}{res}      2,809        0.17       94.72
+{txt}                      Stockton-Lodi, CA {c |}{res}      9,054        0.54       95.26
+{txt}                             Toledo, OH {c |}{res}      8,043        0.48       95.74
+{txt}                             Topeka, KS {c |}{res}      2,603        0.15       95.89
+{txt}                            Trenton, NJ {c |}{res}      4,207        0.25       96.14
+{txt}                         Tuscaloosa, AL {c |}{res}      2,855        0.17       96.31
+{txt}                              Tyler, TX {c |}{res}      2,561        0.15       96.46
+{txt}                         Utica-Rome, NY {c |}{res}      3,859        0.23       96.69
+{txt}                  Vallejo-Fairfield, CA {c |}{res}      5,433        0.32       97.02
+{txt}                Visalia-Porterville, CA {c |}{res}      5,447        0.32       97.34
+{txt}                               Waco, TX {c |}{res}      3,916        0.23       97.57
+{txt}                             Wausau, WI {c |}{res}      1,792        0.11       97.68
+{txt}                          Wenatchee, WA {c |}{res}      1,274        0.08       97.75
+{txt}                            Wichita, KS {c |}{res}      6,482        0.38       98.14
+{txt}                      Wichita Falls, TX {c |}{res}      2,120        0.13       98.26
+{txt}                         Wilmington, NC {c |}{res}      3,160        0.19       98.45
+{txt}                      Winston-Salem, NC {c |}{res}      7,259        0.43       98.88
+{txt}                             Yakima, WA {c |}{res}      2,993        0.18       99.06
+{txt}                       York-Hanover, PA {c |}{res}      4,685        0.28       99.34
+{txt}      Youngstown-Warren-Boardman, OH-PA {c |}{res}      6,553        0.39       99.73
+{txt}                          Yuba City, CA {c |}{res}      2,266        0.13       99.86
+{txt}                               Yuma, AZ {c |}{res}      2,318        0.14      100.00
+{txt}{hline 40}{c +}{hline 35}
+                                  Total {c |}{res}  1,684,723      100.00
+{txt}
+{com}. sum bigcity if met2013 == 0
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 5}bigcity {c |}{res}    940,765           0           0          0          0
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. * Create a larger bucket, large educational distance 
+. gen eddistlarge = eddist > 1 & eddist != . 
+{txt}
+{com}. replace eddistlarge = . if sprule == 0
+{txt}(2,204,158 real changes made, 2,204,158 to missing)
+
+{com}. tab eddistlarge
+
+{txt}eddistlarge {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}  1,534,640       85.49       85.49
+{txt}          1 {c |}{res}    260,427       14.51      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  1,795,067      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. *generate mover 
+.         * mover = 0: if not a mover - in the same house and diff house within county
+.         * mover = 1: if moved - diff house between counties or states or were abroad
+. gen mover = 0 if migrate1d == 10 | migrate1d == 23
+{txt}(438,203 missing values generated)
+
+{com}. replace mover = 1 if migrate1d > 23 & migrate1d < .
+{txt}(438,203 real changes made)
+
+{com}. 
+. tab mover
+
+      {txt}mover {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}  3,561,022       89.04       89.04
+{txt}          1 {c |}{res}    438,203       10.96      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. reg eddist smallcity midcity bigcity if samesex == 0 [aweight = perwt]
+{txt}(sum of wgt is 38,991,406)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res} 1,779,910
+{txt}{hline 13}{c +}{hline 34}   F(3, 1779906)   = {res}    53.90
+{txt}       Model {c |} {res} 97.9119047         3  32.6373016   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1077841.83 1,779,906  .605561095   {txt}R-squared       ={res}    0.0001
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0001
+{txt}       Total {c |} {res} 1077939.74 1,779,909  .605615084   {txt}Root MSE        =   {res} .77818
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      eddist{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2}-.0087321{col 26}{space 2} .0015738{col 37}{space 1}   -5.55{col 46}{space 3}0.000{col 54}{space 4}-.0118166{col 67}{space 3}-.0056476
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2}-.0145376{col 26}{space 2} .0016015{col 37}{space 1}   -9.08{col 46}{space 3}0.000{col 54}{space 4}-.0176765{col 67}{space 3}-.0113986
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}-.0184077{col 26}{space 2} .0016314{col 37}{space 1}  -11.28{col 46}{space 3}0.000{col 54}{space 4}-.0216052{col 67}{space 3}-.0152102
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .7189502{col 26}{space 2} .0009055{col 37}{space 1}  793.96{col 46}{space 3}0.000{col 54}{space 4} .7171754{col 67}{space 3}  .720725
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest eddist, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}1779910{col 22} .7196437{col 34} .0005864{col 46} .7823841{col 58} .7184943{col 70} .7207931
+       {txt}1 {c |}{res}{col 12} 15,157{col 22}  .779112{col 34} .0066995{col 46} .8247966{col 58} .7659802{col 70} .7922437
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}1795067{col 22} .7201458{col 34} .0005842{col 46} .7827705{col 58} .7190007{col 70} .7212909
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0594683{col 34}  .006385{col 58}-.0719826{col 70} -.046954
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -9.3138
+{txt}Ho: diff = 0                                     degrees of freedom = {res} 1.8e+06
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. tab samesex
+
+    {txt}samesex {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}  3,980,700       99.54       99.54
+{txt}          1 {c |}{res}     18,525        0.46      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  3,999,225      100.00
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest eddistind1, by(samesex)
+{err}variable {bf}eddistind1{sf} not found
+{txt}{search r(111), local:r(111);}
+
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. 
+. tab eddist, gen(eddistind)
+
+     {txt}eddist {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}    814,536       45.38       45.38
+{txt}          1 {c |}{res}    720,104       40.12       85.49
+{txt}          2 {c |}{res}    213,804       11.91       97.40
+{txt}          3 {c |}{res}     41,494        2.31       99.71
+{txt}          4 {c |}{res}      5,129        0.29      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  1,795,067      100.00
+{txt}
+{com}. sum eddistind*
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}eddistind1 {c |}{res}  1,795,067    .4537636    .4978577          0          1
+{txt}{space 2}eddistind2 {c |}{res}  1,795,067    .4011572    .4901329          0          1
+{txt}{space 2}eddistind3 {c |}{res}  1,795,067    .1191064    .3239138          0          1
+{txt}{space 2}eddistind4 {c |}{res}  1,795,067    .0231156    .1502706          0          1
+{txt}{space 2}eddistind5 {c |}{res}  1,795,067    .0028573    .0533771          0          1
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest eddistind1, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}1779910{col 22} .4539583{col 34} .0003732{col 46} .4978758{col 58} .4532269{col 70} .4546898
+       {txt}1 {c |}{res}{col 12} 15,157{col 22}   .43089{col 34} .0040224{col 46} .4952171{col 58} .4230056{col 70} .4387745
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}1795067{col 22} .4537636{col 34} .0003716{col 46} .4978577{col 58} .4530353{col 70} .4544919
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0230683{col 34}  .004061{col 58} .0151089{col 70} .0310278
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res}  5.6804
+{txt}Ho: diff = 0                                     degrees of freedom = {res} 1.8e+06
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}1.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}0.0000
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest eddistind5, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}1779910{col 22}  .002835{col 34} .0000399{col 46}  .053169{col 58} .0027569{col 70} .0029131
+       {txt}1 {c |}{res}{col 12} 15,157{col 22}  .005476{col 34} .0005994{col 46} .0737997{col 58}  .004301{col 70}  .006651
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}1795067{col 22} .0028573{col 34} .0000398{col 46} .0533771{col 58} .0027792{col 70} .0029354
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} -.002641{col 34} .0004354{col 58}-.0034944{col 70}-.0017877
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -6.0658
+{txt}Ho: diff = 0                                     degrees of freedom = {res} 1.8e+06
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest eddist, by(samesex_m)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}  8,755{col 22} .7368361{col 34} .0084741{col 46} .7929082{col 58} .7202248{col 70} .7534474
+       {txt}1 {c |}{res}{col 12}  6,402{col 22}  .836926{col 34} .0107886{col 46} .8632248{col 58} .8157766{col 70} .8580753
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12} 15,157{col 22}  .779112{col 34} .0066995{col 46} .8247966{col 58} .7659802{col 70} .7922437
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.1000899{col 34} .0135394{col 58}-.1266288{col 70} -.073551
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -7.3925
+{txt}Ho: diff = 0                                     degrees of freedom = {res}   15155
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. tab samesex_m
+
+  {txt}samesex_m {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}     10,219       55.16       55.16
+{txt}          1 {c |}{res}      8,306       44.84      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}     18,525      100.00
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest eddistind5, by(samesex_m)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}  8,755{col 22} .0036551{col 34}  .000645{col 46} .0603499{col 58} .0023907{col 70} .0049194
+       {txt}1 {c |}{res}{col 12}  6,402{col 22} .0079663{col 34} .0011111{col 46} .0889046{col 58} .0057881{col 70} .0101445
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12} 15,157{col 22}  .005476{col 34} .0005994{col 46} .0737997{col 58}  .004301{col 70}  .006651
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0043112{col 34} .0012131{col 58}-.0066891{col 70}-.0019333
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -3.5538
+{txt}Ho: diff = 0                                     degrees of freedom = {res}   15155
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0002         {txt}Pr(|T| > |t|) = {res}0.0004          {txt}Pr(T > t) = {res}0.9998
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest eddistind1, by(samesex_m)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}  8,755{col 22} .4467162{col 34} .0053136{col 46} .4971811{col 58} .4363003{col 70}  .457132
+       {txt}1 {c |}{res}{col 12}  6,402{col 22} .4092471{col 34} .0061457{col 46} .4917333{col 58} .3971995{col 70} .4212948
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12} 15,157{col 22}   .43089{col 34} .0040224{col 46} .4952171{col 58} .4230056{col 70} .4387745
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0374691{col 34} .0081382{col 58} .0215172{col 70} .0534209
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res}  4.6041
+{txt}Ho: diff = 0                                     degrees of freedom = {res}   15155
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}1.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}0.0000
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. **test opposite sex couples and female same-sex couples
+. ttest eddist if samesex == 0 | samesex_m == 0, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}1779910{col 22} .7196437{col 34} .0005864{col 46} .7823841{col 58} .7184943{col 70} .7207931
+       {txt}1 {c |}{res}{col 12}  8,755{col 22} .7368361{col 34} .0084741{col 46} .7929082{col 58} .7202248{col 70} .7534474
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}1788665{col 22} .7197278{col 34}  .000585{col 46} .7824367{col 58} .7185812{col 70} .7208745
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0171924{col 34} .0083827{col 58}-.0336223{col 70}-.0007625
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -2.0509
+{txt}Ho: diff = 0                                     degrees of freedom = {res} 1.8e+06
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0201         {txt}Pr(|T| > |t|) = {res}0.0403          {txt}Pr(T > t) = {res}0.9799
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. reg eddist smallcity midcity bigcity 
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res} 1,795,067
+{txt}{hline 13}{c +}{hline 34}   F(3, 1795063)   = {res}    71.99
+{txt}       Model {c |} {res} 132.306459         3   44.102153   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1099757.99 1,795,063  .612657042   {txt}R-squared       ={res}    0.0001
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0001
+{txt}       Total {c |} {res} 1099890.29 1,795,066  .612729724   {txt}Root MSE        =   {res} .78272
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      eddist{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2}-.0113364{col 26}{space 2} .0015793{col 37}{space 1}   -7.18{col 46}{space 3}0.000{col 54}{space 4}-.0144318{col 67}{space 3} -.008241
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2}-.0171255{col 26}{space 2} .0016193{col 37}{space 1}  -10.58{col 46}{space 3}0.000{col 54}{space 4}-.0202992{col 67}{space 3}-.0139518
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}-.0208361{col 26}{space 2}   .00164{col 37}{space 1}  -12.70{col 46}{space 3}0.000{col 54}{space 4}-.0240505{col 67}{space 3}-.0176217
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  .729313{col 26}{space 2} .0008847{col 37}{space 1}  824.38{col 46}{space 3}0.000{col 54}{space 4}  .727579{col 67}{space 3} .7310469
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. reg eddist smallcity midcity bigcity if samesex == 0 [aweight = perwt]
+{txt}(sum of wgt is 38,991,406)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res} 1,779,910
+{txt}{hline 13}{c +}{hline 34}   F(3, 1779906)   = {res}    53.90
+{txt}       Model {c |} {res} 97.9119047         3  32.6373016   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1077841.83 1,779,906  .605561095   {txt}R-squared       ={res}    0.0001
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0001
+{txt}       Total {c |} {res} 1077939.74 1,779,909  .605615084   {txt}Root MSE        =   {res} .77818
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      eddist{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2}-.0087321{col 26}{space 2} .0015738{col 37}{space 1}   -5.55{col 46}{space 3}0.000{col 54}{space 4}-.0118166{col 67}{space 3}-.0056476
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2}-.0145376{col 26}{space 2} .0016015{col 37}{space 1}   -9.08{col 46}{space 3}0.000{col 54}{space 4}-.0176765{col 67}{space 3}-.0113986
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}-.0184077{col 26}{space 2} .0016314{col 37}{space 1}  -11.28{col 46}{space 3}0.000{col 54}{space 4}-.0216052{col 67}{space 3}-.0152102
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .7189502{col 26}{space 2} .0009055{col 37}{space 1}  793.96{col 46}{space 3}0.000{col 54}{space 4} .7171754{col 67}{space 3}  .720725
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. reg eddist smallcity midcity bigcity if samesex == 1 [aweight = perwt]
+{txt}(sum of wgt is 315,029)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}    15,157
+{txt}{hline 13}{c +}{hline 34}   F(3, 15153)     = {res}     0.93
+{txt}       Model {c |} {res} 1.86896847         3  .622989489   {txt}Prob > F        ={res}    0.4227
+{txt}    Residual {c |} {res} 10097.3974    15,153  .666362923   {txt}R-squared       ={res}    0.0002
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0000
+{txt}       Total {c |} {res} 10099.2663    15,156  .666354337   {txt}Root MSE        =   {res} .81631
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      eddist{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0303162{col 26}{space 2} .0189514{col 37}{space 1}    1.60{col 46}{space 3}0.110{col 54}{space 4}-.0068309{col 67}{space 3} .0674633
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0091709{col 26}{space 2} .0175139{col 37}{space 1}    0.52{col 46}{space 3}0.601{col 54}{space 4}-.0251585{col 67}{space 3} .0435003
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0178952{col 26}{space 2} .0180412{col 37}{space 1}    0.99{col 46}{space 3}0.321{col 54}{space 4}-.0174677{col 67}{space 3} .0532582
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .7581723{col 26}{space 2} .0110918{col 37}{space 1}   68.35{col 46}{space 3}0.000{col 54}{space 4}  .736431{col 67}{space 3} .7799135
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddist smallcity midcity bigcity if samesex_m == 0 [aweight = perwt]
+{txt}(sum of wgt is 183,180)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     8,755
+{txt}{hline 13}{c +}{hline 34}   F(3, 8751)      = {res}     0.54
+{txt}       Model {c |} {res} .982147941         3  .327382647   {txt}Prob > F        ={res}    0.6581
+{txt}    Residual {c |} {res} 5353.07777     8,751  .611710406   {txt}R-squared       ={res}    0.0002
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0002
+{txt}       Total {c |} {res} 5354.05992     8,754  .611612967   {txt}Root MSE        =   {res} .78212
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      eddist{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0254578{col 26}{space 2} .0232651{col 37}{space 1}    1.09{col 46}{space 3}0.274{col 54}{space 4}-.0201473{col 67}{space 3} .0710629
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0095853{col 26}{space 2} .0220696{col 37}{space 1}    0.43{col 46}{space 3}0.664{col 54}{space 4}-.0336764{col 67}{space 3} .0528469
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0222628{col 26}{space 2} .0234448{col 37}{space 1}    0.95{col 46}{space 3}0.342{col 54}{space 4}-.0236945{col 67}{space 3} .0682202
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .7221719{col 26}{space 2} .0132572{col 37}{space 1}   54.47{col 46}{space 3}0.000{col 54}{space 4} .6961846{col 67}{space 3} .7481591
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddist smallcity midcity bigcity if samesex_m == 1 [aweight = perwt]
+{txt}(sum of wgt is 131,849)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     6,402
+{txt}{hline 13}{c +}{hline 34}   F(3, 6398)      = {res}     0.64
+{txt}       Model {c |} {res} 1.41083619         3  .470278732   {txt}Prob > F        ={res}    0.5911
+{txt}    Residual {c |} {res} 4723.04403     6,398  .738206319   {txt}R-squared       ={res}    0.0003
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0002
+{txt}       Total {c |} {res} 4724.45487     6,401  .738080748   {txt}Root MSE        =   {res} .85919
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      eddist{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2}  .024896{col 26}{space 2} .0320251{col 37}{space 1}    0.78{col 46}{space 3}0.437{col 54}{space 4} -.037884{col 67}{space 3}  .087676
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2}-.0140944{col 26}{space 2} .0287396{col 37}{space 1}   -0.49{col 46}{space 3}0.624{col 54}{space 4}-.0704337{col 67}{space 3} .0422449
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}-.0163709{col 26}{space 2}  .028762{col 37}{space 1}   -0.57{col 46}{space 3}0.569{col 54}{space 4} -.072754{col 67}{space 3} .0400122
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .8241183{col 26}{space 2}  .019556{col 37}{space 1}   42.14{col 46}{space 3}0.000{col 54}{space 4} .7857821{col 67}{space 3} .8624545
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistind5 smallcity midcity bigcity
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res} 1,795,067
+{txt}{hline 13}{c +}{hline 34}   F(3, 1795063)   = {res}   100.54
+{txt}       Model {c |} {res} .859247559         3  .286415853   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 5113.48579 1,795,063  .002848639   {txt}R-squared       ={res}    0.0002
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0002
+{txt}       Total {c |} {res} 5114.34504 1,795,066  .002849113   {txt}Root MSE        =   {res} .05337
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}  eddistind5{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0004673{col 26}{space 2} .0001077{col 37}{space 1}    4.34{col 46}{space 3}0.000{col 54}{space 4} .0002563{col 67}{space 3} .0006784
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0009466{col 26}{space 2} .0001104{col 37}{space 1}    8.57{col 46}{space 3}0.000{col 54}{space 4} .0007302{col 67}{space 3}  .001163
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0018859{col 26}{space 2} .0001118{col 37}{space 1}   16.86{col 46}{space 3}0.000{col 54}{space 4} .0016667{col 67}{space 3} .0021051
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0022509{col 26}{space 2} .0000603{col 37}{space 1}   37.31{col 46}{space 3}0.000{col 54}{space 4} .0021327{col 67}{space 3} .0023692
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistind5 smallcity-bigcity if samesex == 0 [aweight = perwt]
+{txt}(sum of wgt is 38,991,406)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res} 1,779,910
+{txt}{hline 13}{c +}{hline 34}   F(3, 1779906)   = {res}    66.84
+{txt}       Model {c |} {res}  .54328706         3  .181095687   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 4822.39402 1,779,906  .002709353   {txt}R-squared       ={res}    0.0001
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0001
+{txt}       Total {c |} {res}  4822.9373 1,779,909  .002709654   {txt}Root MSE        =   {res} .05205
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}  eddistind5{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0003337{col 26}{space 2} .0001053{col 37}{space 1}    3.17{col 46}{space 3}0.002{col 54}{space 4} .0001274{col 67}{space 3}   .00054
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0008173{col 26}{space 2} .0001071{col 37}{space 1}    7.63{col 46}{space 3}0.000{col 54}{space 4} .0006073{col 67}{space 3} .0010273
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0014766{col 26}{space 2} .0001091{col 37}{space 1}   13.53{col 46}{space 3}0.000{col 54}{space 4} .0012627{col 67}{space 3} .0016904
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0022163{col 26}{space 2} .0000606{col 37}{space 1}   36.59{col 46}{space 3}0.000{col 54}{space 4} .0020976{col 67}{space 3} .0023351
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistind5 smallcity-bigcity if samesex == 1 [aweight = perwt]
+{txt}(sum of wgt is 315,029)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}    15,157
+{txt}{hline 13}{c +}{hline 34}   F(3, 15153)     = {res}     6.67
+{txt}       Model {c |} {res} .094592165         3  .031530722   {txt}Prob > F        ={res}    0.0002
+{txt}    Residual {c |} {res} 71.6360109    15,153  .004727513   {txt}R-squared       ={res}    0.0013
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0011
+{txt}       Total {c |} {res} 71.7306031    15,156  .004732819   {txt}Root MSE        =   {res} .06876
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}  eddistind5{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0014761{col 26}{space 2} .0015963{col 37}{space 1}    0.92{col 46}{space 3}0.355{col 54}{space 4}-.0016528{col 67}{space 3} .0046049
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0031201{col 26}{space 2} .0014752{col 37}{space 1}    2.12{col 46}{space 3}0.034{col 54}{space 4} .0002285{col 67}{space 3} .0060116
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0066398{col 26}{space 2} .0015196{col 37}{space 1}    4.37{col 46}{space 3}0.000{col 54}{space 4} .0036612{col 67}{space 3} .0096184
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0022918{col 26}{space 2} .0009342{col 37}{space 1}    2.45{col 46}{space 3}0.014{col 54}{space 4} .0004605{col 67}{space 3}  .004123
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistind5 smallcity-bigcity if samesex_m == 1  [aweight = perwt]
+{txt}(sum of wgt is 131,849)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     6,402
+{txt}{hline 13}{c +}{hline 34}   F(3, 6398)      = {res}     5.17
+{txt}       Model {c |} {res} .117634083         3  .039211361   {txt}Prob > F        ={res}    0.0014
+{txt}    Residual {c |} {res} 48.4999855     6,398  .007580492   {txt}R-squared       ={res}    0.0024
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0020
+{txt}       Total {c |} {res} 48.6176196     6,401  .007595316   {txt}Root MSE        =   {res} .08707
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}  eddistind5{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0015526{col 26}{space 2} .0032453{col 37}{space 1}    0.48{col 46}{space 3}0.632{col 54}{space 4}-.0048092{col 67}{space 3} .0079144
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0048984{col 26}{space 2} .0029123{col 37}{space 1}    1.68{col 46}{space 3}0.093{col 54}{space 4}-.0008108{col 67}{space 3} .0106075
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0109199{col 26}{space 2} .0029146{col 37}{space 1}    3.75{col 46}{space 3}0.000{col 54}{space 4} .0052063{col 67}{space 3} .0166335
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0032701{col 26}{space 2} .0019817{col 37}{space 1}    1.65{col 46}{space 3}0.099{col 54}{space 4}-.0006147{col 67}{space 3} .0071549
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. 
+. . reg eddistind5 smallcity-bigcity if samesex_m == 0  [aweight = perwt]
+{txt}(sum of wgt is 183,180)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     8,755
+{txt}{hline 13}{c +}{hline 34}   F(3, 8751)      = {res}     0.65
+{txt}       Model {c |} {res}  .00520427         3  .001734757   {txt}Prob > F        ={res}    0.5820
+{txt}    Residual {c |} {res} 23.3039251     8,751  .002663001   {txt}R-squared       ={res}    0.0002
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0001
+{txt}       Total {c |} {res} 23.3091294     8,754  .002662683   {txt}Root MSE        =   {res}  .0516
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}  eddistind5{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2}  .001298{col 26}{space 2}  .001535{col 37}{space 1}    0.85{col 46}{space 3}0.398{col 54}{space 4} -.001711{col 67}{space 3} .0043071
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0013557{col 26}{space 2} .0014562{col 37}{space 1}    0.93{col 46}{space 3}0.352{col 54}{space 4}-.0014987{col 67}{space 3} .0042101
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0019233{col 26}{space 2} .0015469{col 37}{space 1}    1.24{col 46}{space 3}0.214{col 54}{space 4} -.001109{col 67}{space 3} .0049555
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0017577{col 26}{space 2} .0008747{col 37}{space 1}    2.01{col 46}{space 3}0.045{col 54}{space 4} .0000431{col 67}{space 3} .0034724
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. 
+. reg eddistlarge smallcity midcity bigcity
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res} 1,795,067
+{txt}{hline 13}{c +}{hline 34}   F(3, 1795063)   = {res}    16.25
+{txt}       Model {c |} {res} 6.04607968         3  2.01535989   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 222638.396 1,795,063   .12402818   {txt}R-squared       ={res}    0.0000
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0000
+{txt}       Total {c |} {res} 222644.442 1,795,066  .124031341   {txt}Root MSE        =   {res} .35218
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} eddistlarge{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2}-.0038087{col 26}{space 2} .0007106{col 37}{space 1}   -5.36{col 46}{space 3}0.000{col 54}{space 4}-.0052014{col 67}{space 3} -.002416
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2}-.0042347{col 26}{space 2} .0007286{col 37}{space 1}   -5.81{col 46}{space 3}0.000{col 54}{space 4}-.0056627{col 67}{space 3}-.0028067
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}-.0025012{col 26}{space 2} .0007379{col 37}{space 1}   -3.39{col 46}{space 3}0.001{col 54}{space 4}-.0039475{col 67}{space 3}-.0010549
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .1470721{col 26}{space 2} .0003981{col 37}{space 1}  369.48{col 46}{space 3}0.000{col 54}{space 4}  .146292{col 67}{space 3} .1478523
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistlarge smallcity midcity bigcity if samesex == 0 [aweight = perwt]
+{txt}(sum of wgt is 38,991,406)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res} 1,779,910
+{txt}{hline 13}{c +}{hline 34}   F(3, 1779906)   = {res}     5.56
+{txt}       Model {c |} {res}  2.0307997         3  .676933233   {txt}Prob > F        ={res}    0.0008
+{txt}    Residual {c |} {res} 216682.946 1,779,906  .121738421   {txt}R-squared       ={res}    0.0000
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0000
+{txt}       Total {c |} {res} 216684.977 1,779,909  .121739357   {txt}Root MSE        =   {res} .34891
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} eddistlarge{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} -.002349{col 26}{space 2} .0007056{col 37}{space 1}   -3.33{col 46}{space 3}0.001{col 54}{space 4}-.0037319{col 67}{space 3} -.000966
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2}-.0022862{col 26}{space 2} .0007181{col 37}{space 1}   -3.18{col 46}{space 3}0.001{col 54}{space 4}-.0036936{col 67}{space 3}-.0008788
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}-.0005892{col 26}{space 2} .0007315{col 37}{space 1}   -0.81{col 46}{space 3}0.421{col 54}{space 4}-.0020229{col 67}{space 3} .0008444
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .1429019{col 26}{space 2}  .000406{col 37}{space 1}  351.97{col 46}{space 3}0.000{col 54}{space 4} .1421062{col 67}{space 3} .1436977
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistlarge smallcity midcity bigcity if samesex == 1 [aweight = perwt]
+{txt}(sum of wgt is 315,029)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}    15,157
+{txt}{hline 13}{c +}{hline 34}   F(3, 15153)     = {res}     2.23
+{txt}       Model {c |} {res}  .93525464         3  .311751547   {txt}Prob > F        ={res}    0.0826
+{txt}    Residual {c |} {res} 2119.50608    15,153  .139873694   {txt}R-squared       ={res}    0.0004
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0002
+{txt}       Total {c |} {res} 2120.44133    15,156  .139907715   {txt}Root MSE        =   {res}   .374
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} eddistlarge{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0220842{col 26}{space 2} .0086827{col 37}{space 1}    2.54{col 46}{space 3}0.011{col 54}{space 4}  .005065{col 67}{space 3} .0391033
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0084605{col 26}{space 2} .0080241{col 37}{space 1}    1.05{col 46}{space 3}0.292{col 54}{space 4}-.0072678{col 67}{space 3} .0241887
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0111561{col 26}{space 2} .0082657{col 37}{space 1}    1.35{col 46}{space 3}0.177{col 54}{space 4}-.0050456{col 67}{space 3} .0273578
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .1596255{col 26}{space 2} .0050818{col 37}{space 1}   31.41{col 46}{space 3}0.000{col 54}{space 4} .1496646{col 67}{space 3} .1695864
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistlarge smallcity midcity bigcity if samesex_m == 0 [aweight = perwt]
+{txt}(sum of wgt is 183,180)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     8,755
+{txt}{hline 13}{c +}{hline 34}   F(3, 8751)      = {res}     1.76
+{txt}       Model {c |} {res} .681901361         3  .227300454   {txt}Prob > F        ={res}    0.1520
+{txt}    Residual {c |} {res} 1128.55556     8,751   .12896304   {txt}R-squared       ={res}    0.0006
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0003
+{txt}       Total {c |} {res} 1129.23747     8,754   .12899674   {txt}Root MSE        =   {res} .35911
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} eddistlarge{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0176938{col 26}{space 2} .0106823{col 37}{space 1}    1.66{col 46}{space 3}0.098{col 54}{space 4} -.003246{col 67}{space 3} .0386336
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0045756{col 26}{space 2} .0101334{col 37}{space 1}    0.45{col 46}{space 3}0.652{col 54}{space 4}-.0152882{col 67}{space 3} .0244394
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0210802{col 26}{space 2} .0107648{col 37}{space 1}    1.96{col 46}{space 3}0.050{col 54}{space 4}-.0000214{col 67}{space 3} .0421817
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .1437752{col 26}{space 2} .0060871{col 37}{space 1}   23.62{col 46}{space 3}0.000{col 54}{space 4}  .131843{col 67}{space 3} .1557074
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistlarge smallcity midcity bigcity if samesex_m == 1 [aweight = perwt]
+{txt}(sum of wgt is 131,849)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     6,402
+{txt}{hline 13}{c +}{hline 34}   F(3, 6398)      = {res}     1.82
+{txt}       Model {c |} {res} .839952102         3  .279984034   {txt}Prob > F        ={res}    0.1419
+{txt}    Residual {c |} {res} 986.403819     6,398  .154173776   {txt}R-squared       ={res}    0.0009
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0004
+{txt}       Total {c |} {res} 987.243771     6,401   .15423274   {txt}Root MSE        =   {res} .39265
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} eddistlarge{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0230328{col 26}{space 2} .0146355{col 37}{space 1}    1.57{col 46}{space 3}0.116{col 54}{space 4}-.0056577{col 67}{space 3} .0517232
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0030954{col 26}{space 2}  .013134{col 37}{space 1}    0.24{col 46}{space 3}0.814{col 54}{space 4}-.0226517{col 67}{space 3} .0288424
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}-.0119436{col 26}{space 2} .0131442{col 37}{space 1}   -0.91{col 46}{space 3}0.364{col 54}{space 4}-.0377106{col 67}{space 3} .0138235
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .1886603{col 26}{space 2} .0089371{col 37}{space 1}   21.11{col 46}{space 3}0.000{col 54}{space 4} .1711406{col 67}{space 3} .2061799
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistlarge smallcity midcity bigcity if samesex == 1 & mover == 0 [aweight = perwt]
+{txt}(sum of wgt is 289,657)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}    13,952
+{txt}{hline 13}{c +}{hline 34}   F(3, 13948)     = {res}     2.46
+{txt}       Model {c |} {res} 1.02516566         3  .341721887   {txt}Prob > F        ={res}    0.0606
+{txt}    Residual {c |} {res} 1936.29767    13,948  .138822603   {txt}R-squared       ={res}    0.0005
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0003
+{txt}       Total {c |} {res} 1937.32283    13,951  .138866234   {txt}Root MSE        =   {res} .37259
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} eddistlarge{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0244701{col 26}{space 2} .0090418{col 37}{space 1}    2.71{col 46}{space 3}0.007{col 54}{space 4} .0067468{col 67}{space 3} .0421933
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0071096{col 26}{space 2} .0083314{col 37}{space 1}    0.85{col 46}{space 3}0.393{col 54}{space 4} -.009221{col 67}{space 3} .0234401
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0064875{col 26}{space 2} .0085627{col 37}{space 1}    0.76{col 46}{space 3}0.449{col 54}{space 4}-.0102966{col 67}{space 3} .0232716
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .1589913{col 26}{space 2}   .00527{col 37}{space 1}   30.17{col 46}{space 3}0.000{col 54}{space 4} .1486613{col 67}{space 3} .1693212
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg eddistlarge smallcity midcity bigcity if samesex == 1 [aweight = perwt]
+{txt}(sum of wgt is 315,029)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}    15,157
+{txt}{hline 13}{c +}{hline 34}   F(3, 15153)     = {res}     2.23
+{txt}       Model {c |} {res}  .93525464         3  .311751547   {txt}Prob > F        ={res}    0.0826
+{txt}    Residual {c |} {res} 2119.50608    15,153  .139873694   {txt}R-squared       ={res}    0.0004
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0002
+{txt}       Total {c |} {res} 2120.44133    15,156  .139907715   {txt}Root MSE        =   {res}   .374
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} eddistlarge{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0220842{col 26}{space 2} .0086827{col 37}{space 1}    2.54{col 46}{space 3}0.011{col 54}{space 4}  .005065{col 67}{space 3} .0391033
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0084605{col 26}{space 2} .0080241{col 37}{space 1}    1.05{col 46}{space 3}0.292{col 54}{space 4}-.0072678{col 67}{space 3} .0241887
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0111561{col 26}{space 2} .0082657{col 37}{space 1}    1.35{col 46}{space 3}0.177{col 54}{space 4}-.0050456{col 67}{space 3} .0273578
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .1596255{col 26}{space 2} .0050818{col 37}{space 1}   31.41{col 46}{space 3}0.000{col 54}{space 4} .1496646{col 67}{space 3} .1695864
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. tab eddist
+
+     {txt}eddist {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}    814,536       45.38       45.38
+{txt}          1 {c |}{res}    720,104       40.12       85.49
+{txt}          2 {c |}{res}    213,804       11.91       97.40
+{txt}          3 {c |}{res}     41,494        2.31       99.71
+{txt}          4 {c |}{res}      5,129        0.29      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  1,795,067      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. ttest eddist if eddist != 0, by(samesex_m)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}  4,844{col 22} 1.331751{col 34} .0084268{col 46} .5864948{col 58}  1.31523{col 70} 1.348271
+       {txt}1 {c |}{res}{col 12}  3,782{col 22} 1.416711{col 34} .0107849{col 46}   .66325{col 58} 1.395566{col 70} 1.437856
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}  8,626{col 22} 1.369001{col 34} .0067047{col 46} .6227076{col 58} 1.355858{col 70} 1.382144
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0849601{col 34}  .013482{col 58} -.111388{col 70}-.0585322
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -6.3018
+{txt}Ho: diff = 0                                     degrees of freedom = {res}    8624
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. gen notzeroeddist = eddist
+{txt}(2,204,158 missing values generated)
+
+{com}. replace notzeroeddist = . if eddist == 0
+{txt}(814,536 real changes made, 814,536 to missing)
+
+{com}. tab notzeroeddist
+
+{txt}notzeroeddi {c |}
+         st {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}    720,104       73.44       73.44
+{txt}          2 {c |}{res}    213,804       21.80       95.25
+{txt}          3 {c |}{res}     41,494        4.23       99.48
+{txt}          4 {c |}{res}      5,129        0.52      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}    980,531      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}.  ttest notzeroeddist, by(samesex_m)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}  4,844{col 22} 1.331751{col 34} .0084268{col 46} .5864948{col 58}  1.31523{col 70} 1.348271
+       {txt}1 {c |}{res}{col 12}  3,782{col 22} 1.416711{col 34} .0107849{col 46}   .66325{col 58} 1.395566{col 70} 1.437856
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}  8,626{col 22} 1.369001{col 34} .0067047{col 46} .6227076{col 58} 1.355858{col 70} 1.382144
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0849601{col 34}  .013482{col 58} -.111388{col 70}-.0585322
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -6.3018
+{txt}Ho: diff = 0                                     degrees of freedom = {res}    8624
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. ttest notzeroeddist, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}971,905{col 22} 1.317928{col 34} .0005849{col 46} .5766508{col 58} 1.316782{col 70} 1.319075
+       {txt}1 {c |}{res}{col 12}  8,626{col 22} 1.369001{col 34} .0067047{col 46} .6227076{col 58} 1.355858{col 70} 1.382144
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}980,531{col 22} 1.318377{col 34} .0005828{col 46} .5770913{col 58} 1.317235{col 70}  1.31952
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0510725{col 34} .0062409{col 58}-.0633044{col 70}-.0388406
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -8.1836
+{txt}Ho: diff = 0                                     degrees of freedom = {res}  980529
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. Ttest eddist if samesex == 0 | samesex_m == 0, by(samesex)
+{err}command {bf}Ttest{sf} not defined by Ttest.ado
+{txt}{search r(199), local:r(199);}
+
+{com}. ttest eddist if samesex == 0 | samesex_m == 0, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}1779910{col 22} .7196437{col 34} .0005864{col 46} .7823841{col 58} .7184943{col 70} .7207931
+       {txt}1 {c |}{res}{col 12}  8,755{col 22} .7368361{col 34} .0084741{col 46} .7929082{col 58} .7202248{col 70} .7534474
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}1788665{col 22} .7197278{col 34}  .000585{col 46} .7824367{col 58} .7185812{col 70} .7208745
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0171924{col 34} .0083827{col 58}-.0336223{col 70}-.0007625
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -2.0509
+{txt}Ho: diff = 0                                     degrees of freedom = {res} 1.8e+06
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0201         {txt}Pr(|T| > |t|) = {res}0.0403          {txt}Pr(T > t) = {res}0.9799
+
+{com}. ttest eddist, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}1779910{col 22} .7196437{col 34} .0005864{col 46} .7823841{col 58} .7184943{col 70} .7207931
+       {txt}1 {c |}{res}{col 12} 15,157{col 22}  .779112{col 34} .0066995{col 46} .8247966{col 58} .7659802{col 70} .7922437
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}1795067{col 22} .7201458{col 34} .0005842{col 46} .7827705{col 58} .7190007{col 70} .7212909
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0594683{col 34}  .006385{col 58}-.0719826{col 70} -.046954
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -9.3138
+{txt}Ho: diff = 0                                     degrees of freedom = {res} 1.8e+06
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. ttest eddist, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}1779910{col 22} .7196437{col 34} .0005864{col 46} .7823841{col 58} .7184943{col 70} .7207931
+       {txt}1 {c |}{res}{col 12} 15,157{col 22}  .779112{col 34} .0066995{col 46} .8247966{col 58} .7659802{col 70} .7922437
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}1795067{col 22} .7201458{col 34} .0005842{col 46} .7827705{col 58} .7190007{col 70} .7212909
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0594683{col 34}  .006385{col 58}-.0719826{col 70} -.046954
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -9.3138
+{txt}Ho: diff = 0                                     degrees of freedom = {res} 1.8e+06
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. ttest nozeroeddist, by(samesex)
+{err}variable {bf}nozeroeddist{sf} not found
+{txt}{search r(111), local:r(111);}
+
+{com}. 
+. 
+. ttest notzeroeddist, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}971,905{col 22} 1.317928{col 34} .0005849{col 46} .5766508{col 58} 1.316782{col 70} 1.319075
+       {txt}1 {c |}{res}{col 12}  8,626{col 22} 1.369001{col 34} .0067047{col 46} .6227076{col 58} 1.355858{col 70} 1.382144
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}980,531{col 22} 1.318377{col 34} .0005828{col 46} .5770913{col 58} 1.317235{col 70}  1.31952
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0510725{col 34} .0062409{col 58}-.0633044{col 70}-.0388406
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -8.1836
+{txt}Ho: diff = 0                                     degrees of freedom = {res}  980529
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. ttest notzeroeddist, by(samesex_m)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}  4,844{col 22} 1.331751{col 34} .0084268{col 46} .5864948{col 58}  1.31523{col 70} 1.348271
+       {txt}1 {c |}{res}{col 12}  3,782{col 22} 1.416711{col 34} .0107849{col 46}   .66325{col 58} 1.395566{col 70} 1.437856
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}  8,626{col 22} 1.369001{col 34} .0067047{col 46} .6227076{col 58} 1.355858{col 70} 1.382144
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0849601{col 34}  .013482{col 58} -.111388{col 70}-.0585322
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -6.3018
+{txt}Ho: diff = 0                                     degrees of freedom = {res}    8624
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. ttest notzeroeddist if samesex == 0 | samesex_m == 0, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}971,905{col 22} 1.317928{col 34} .0005849{col 46} .5766508{col 58} 1.316782{col 70} 1.319075
+       {txt}1 {c |}{res}{col 12}  4,844{col 22} 1.331751{col 34} .0084268{col 46} .5864948{col 58}  1.31523{col 70} 1.348271
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}976,749{col 22} 1.317997{col 34} .0005835{col 46} .5767005{col 58} 1.316853{col 70}  1.31914
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0138224{col 34} .0083067{col 58}-.0301032{col 70} .0024584
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -1.6640
+{txt}Ho: diff = 0                                     degrees of freedom = {res}  976747
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0481         {txt}Pr(|T| > |t|) = {res}0.0961          {txt}Pr(T > t) = {res}0.9519
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. *any couple
+. reg notzeroeddist smallcity midcity bigcity 
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}   980,531
+{txt}{hline 13}{c +}{hline 34}   F(3, 980527)    = {res}    96.56
+{txt}       Model {c |} {res} 96.4414713         3  32.1471571   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 326453.792   980,527  .332937075   {txt}R-squared       ={res}    0.0003
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0003
+{txt}       Total {c |} {res} 326550.233   980,530  .333034413   {txt}Root MSE        =   {res} .57701
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}notzeroedd~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0021722{col 26}{space 2} .0015705{col 37}{space 1}    1.38{col 46}{space 3}0.167{col 54}{space 4} -.000906{col 67}{space 3} .0052504
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0097938{col 26}{space 2} .0016184{col 37}{space 1}    6.05{col 46}{space 3}0.000{col 54}{space 4} .0066217{col 67}{space 3} .0129658
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}  .027167{col 26}{space 2} .0016501{col 37}{space 1}   16.46{col 46}{space 3}0.000{col 54}{space 4} .0239328{col 67}{space 3} .0304012
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  1.31144{col 26}{space 2} .0008745{col 37}{space 1} 1499.59{col 46}{space 3}0.000{col 54}{space 4} 1.309726{col 67}{space 3} 1.313154
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. *straights
+. reg notzeroeddist smallcity midcity bigcity if samesex == 0 [aweight = perwt]
+{txt}(sum of wgt is 21,106,906)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}   971,905
+{txt}{hline 13}{c +}{hline 34}   F(3, 971901)    = {res}   111.67
+{txt}       Model {c |} {res}  109.73417         3  36.5780565   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 318338.983   971,901  .327542602   {txt}R-squared       ={res}    0.0003
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0003
+{txt}       Total {c |} {res} 318448.717   971,904  .327654498   {txt}Root MSE        =   {res} .57231
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}notzeroedd~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0046295{col 26}{space 2} .0015606{col 37}{space 1}    2.97{col 46}{space 3}0.003{col 54}{space 4} .0015708{col 67}{space 3} .0076882
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0132815{col 26}{space 2} .0015964{col 37}{space 1}    8.32{col 46}{space 3}0.000{col 54}{space 4} .0101527{col 67}{space 3} .0164104
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2}  .028945{col 26}{space 2} .0016363{col 37}{space 1}   17.69{col 46}{space 3}0.000{col 54}{space 4} .0257378{col 67}{space 3} .0321521
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.304607{col 26}{space 2} .0008932{col 37}{space 1} 1460.55{col 46}{space 3}0.000{col 54}{space 4} 1.302856{col 67}{space 3} 1.306358
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. *LGBT
+. reg notzeroeddist smallcity midcity bigcity if samesex == 1 [aweight = perwt]
+{txt}(sum of wgt is 178,273)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     8,626
+{txt}{hline 13}{c +}{hline 34}   F(3, 8622)      = {res}     4.56
+{txt}       Model {c |} {res} 5.11159595         3  1.70386532   {txt}Prob > F        ={res}    0.0034
+{txt}    Residual {c |} {res} 3220.47022     8,622   .37351777   {txt}R-squared       ={res}    0.0016
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0012
+{txt}       Total {c |} {res} 3225.58181     8,625    .3739805   {txt}Root MSE        =   {res} .61116
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}notzeroedd~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2}  .026193{col 26}{space 2} .0186331{col 37}{space 1}    1.41{col 46}{space 3}0.160{col 54}{space 4}-.0103324{col 67}{space 3} .0627184
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0420571{col 26}{space 2} .0174311{col 37}{space 1}    2.41{col 46}{space 3}0.016{col 54}{space 4} .0078881{col 67}{space 3} .0762262
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0631479{col 26}{space 2} .0179819{col 37}{space 1}    3.51{col 46}{space 3}0.000{col 54}{space 4} .0278991{col 67}{space 3} .0983968
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.332085{col 26}{space 2} .0109762{col 37}{space 1}  121.36{col 46}{space 3}0.000{col 54}{space 4} 1.310569{col 67}{space 3} 1.353601
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. *lesbians *aweight relative to eo
+. reg notzeroeddist smallcity midcity bigcity if samesex_m == 0 [aweight = perwt]
+{txt}(sum of wgt is 101,596)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     4,844
+{txt}{hline 13}{c +}{hline 34}   F(3, 4840)      = {res}     3.58
+{txt}       Model {c |} {res} 3.46979387         3  1.15659796   {txt}Prob > F        ={res}    0.0134
+{txt}    Residual {c |} {res}  1565.7885     4,840  .323510021   {txt}R-squared       ={res}    0.0022
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0016
+{txt}       Total {c |} {res}  1569.2583     4,843  .324026078   {txt}Root MSE        =   {res} .56878
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}notzeroedd~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0321192{col 26}{space 2} .0226152{col 37}{space 1}    1.42{col 46}{space 3}0.156{col 54}{space 4}-.0122168{col 67}{space 3} .0764551
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0280972{col 26}{space 2} .0215837{col 37}{space 1}    1.30{col 46}{space 3}0.193{col 54}{space 4}-.0142166{col 67}{space 3} .0704111
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0749357{col 26}{space 2} .0230708{col 37}{space 1}    3.25{col 46}{space 3}0.001{col 54}{space 4} .0297065{col 67}{space 3}  .120165
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.296022{col 26}{space 2} .0129311{col 37}{space 1}  100.23{col 46}{space 3}0.000{col 54}{space 4} 1.270672{col 67}{space 3} 1.321373
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. *gays
+. reg notzeroeddist smallcity midcity bigcity if samesex_m == 1 [aweight = perwt]
+{txt}(sum of wgt is 76,677)
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     3,782
+{txt}{hline 13}{c +}{hline 34}   F(3, 3778)      = {res}     0.70
+{txt}       Model {c |} {res} .917288562         3  .305762854   {txt}Prob > F        ={res}    0.5511
+{txt}    Residual {c |} {res} 1646.71111     3,778  .435868478   {txt}R-squared       ={res}    0.0006
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0002
+{txt}       Total {c |} {res}  1647.6284     3,781  .435765247   {txt}Root MSE        =   {res}  .6602
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}notzeroedd~t{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}smallcity {c |}{col 14}{res}{space 2} .0053421{col 26}{space 2} .0315028{col 37}{space 1}    0.17{col 46}{space 3}0.865{col 54}{space 4}-.0564221{col 67}{space 3} .0671062
+{txt}{space 5}midcity {c |}{col 14}{res}{space 2} .0384231{col 26}{space 2} .0288462{col 37}{space 1}    1.33{col 46}{space 3}0.183{col 54}{space 4}-.0181326{col 67}{space 3} .0949787
+{txt}{space 5}bigcity {c |}{col 14}{res}{space 2} .0240485{col 26}{space 2} .0288117{col 37}{space 1}    0.83{col 46}{space 3}0.404{col 54}{space 4}-.0324395{col 67}{space 3} .0805364
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.394365{col 26}{space 2} .0193933{col 37}{space 1}   71.90{col 46}{space 3}0.000{col 54}{space 4} 1.356343{col 67}{space 3} 1.432387
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. tab notzeroeddist
+
+{txt}notzeroeddi {c |}
+         st {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}    720,104       73.44       73.44
+{txt}          2 {c |}{res}    213,804       21.80       95.25
+{txt}          3 {c |}{res}     41,494        4.23       99.48
+{txt}          4 {c |}{res}      5,129        0.52      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}    980,531      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. tab eddist
+
+     {txt}eddist {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}    814,536       45.38       45.38
+{txt}          1 {c |}{res}    720,104       40.12       85.49
+{txt}          2 {c |}{res}    213,804       11.91       97.40
+{txt}          3 {c |}{res}     41,494        2.31       99.71
+{txt}          4 {c |}{res}      5,129        0.29      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}  1,795,067      100.00
+
+{com}. 1795067-980531
+{bf}{err}1795067{sf} is not a valid command name
+{txt}{search r(199), local:r(199);}
+
+{com}. ttest notzeroeddist, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}971,905{col 22} 1.317928{col 34} .0005849{col 46} .5766508{col 58} 1.316782{col 70} 1.319075
+       {txt}1 {c |}{res}{col 12}  8,626{col 22} 1.369001{col 34} .0067047{col 46} .6227076{col 58} 1.355858{col 70} 1.382144
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}980,531{col 22} 1.318377{col 34} .0005828{col 46} .5770913{col 58} 1.317235{col 70}  1.31952
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0510725{col 34} .0062409{col 58}-.0633044{col 70}-.0388406
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -8.1836
+{txt}Ho: diff = 0                                     degrees of freedom = {res}  980529
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. tab notzeroeddist
+
+{txt}notzeroeddi {c |}
+         st {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}    720,104       73.44       73.44
+{txt}          2 {c |}{res}    213,804       21.80       95.25
+{txt}          3 {c |}{res}     41,494        4.23       99.48
+{txt}          4 {c |}{res}      5,129        0.52      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}    980,531      100.00
+
+{com}. sum notzeroeddist if notzeroeddist = .
+{err}invalid syntax
+{txt}{search r(198), local:r(198);}
+
+{com}. sum notzeroeddist if notzeroeddist == .
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+notzeroedd~t {c |}{res}          0
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest notzeroeddist, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}971,905{col 22} 1.317928{col 34} .0005849{col 46} .5766508{col 58} 1.316782{col 70} 1.319075
+       {txt}1 {c |}{res}{col 12}  8,626{col 22} 1.369001{col 34} .0067047{col 46} .6227076{col 58} 1.355858{col 70} 1.382144
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}980,531{col 22} 1.318377{col 34} .0005828{col 46} .5770913{col 58} 1.317235{col 70}  1.31952
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0510725{col 34} .0062409{col 58}-.0633044{col 70}-.0388406
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -8.1836
+{txt}Ho: diff = 0                                     degrees of freedom = {res}  980529
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. ttest eddist, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}1779910{col 22} .7196437{col 34} .0005864{col 46} .7823841{col 58} .7184943{col 70} .7207931
+       {txt}1 {c |}{res}{col 12} 15,157{col 22}  .779112{col 34} .0066995{col 46} .8247966{col 58} .7659802{col 70} .7922437
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}1795067{col 22} .7201458{col 34} .0005842{col 46} .7827705{col 58} .7190007{col 70} .7212909
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0594683{col 34}  .006385{col 58}-.0719826{col 70} -.046954
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -9.3138
+{txt}Ho: diff = 0                                     degrees of freedom = {res} 1.8e+06
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest notzeroeddist, by(samesex_m)      
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}  4,844{col 22} 1.331751{col 34} .0084268{col 46} .5864948{col 58}  1.31523{col 70} 1.348271
+       {txt}1 {c |}{res}{col 12}  3,782{col 22} 1.416711{col 34} .0107849{col 46}   .66325{col 58} 1.395566{col 70} 1.437856
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}  8,626{col 22} 1.369001{col 34} .0067047{col 46} .6227076{col 58} 1.355858{col 70} 1.382144
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0849601{col 34}  .013482{col 58} -.111388{col 70}-.0585322
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -6.3018
+{txt}Ho: diff = 0                                     degrees of freedom = {res}    8624
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/2g/7_679x5122n4qjk1zd5c1q700000gn/T//SD17619.000000"
+{txt}
+{com}. ttest notzeroeddist if samesex == 0 | samesex_m == 0, by(samesex)
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+       0 {c |}{res}{col 12}971,905{col 22} 1.317928{col 34} .0005849{col 46} .5766508{col 58} 1.316782{col 70} 1.319075
+       {txt}1 {c |}{res}{col 12}  4,844{col 22} 1.331751{col 34} .0084268{col 46} .5864948{col 58}  1.31523{col 70} 1.348271
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}976,749{col 22} 1.317997{col 34} .0005835{col 46} .5767005{col 58} 1.316853{col 70}  1.31914
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0138224{col 34} .0083067{col 58}-.0301032{col 70} .0024584
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}0{txt}) - mean({res}1{txt})                                      t = {res} -1.6640
+{txt}Ho: diff = 0                                     degrees of freedom = {res}  976747
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0481         {txt}Pr(|T| > |t|) = {res}0.0961          {txt}Pr(T > t) = {res}0.9519
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. exit, clear
